@@ -15,6 +15,7 @@ import {
   Smartphone,
   Landmark,
   Users,
+  CheckCircle2,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -527,6 +528,7 @@ export const COMPANY = {
   phone: '',
   address: '',
   hours: '',
+  sundayHours: '',
 };
 
 export const NAV_LINKS = [
@@ -542,3 +544,12 @@ export const NAV_LINKS = [
 
 // Re-export for backward compatibility in forms
 export const SERVICES = SOLUTIONS;
+
+export interface JobOpening {
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+}
+
+export const JOB_OPENINGS: JobOpening[] = [];
