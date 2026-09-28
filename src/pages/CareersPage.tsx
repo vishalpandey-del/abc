@@ -12,8 +12,8 @@ import {
 } from 'lucide-react';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { SectionHeading } from '@/components/SectionHeading';
-import { JOB_OPENINGS } from '@/data/content';
-import { supabase } from '@/lib/supabase';
+import { JOB_OPENINGS, COMPANY } from '@/data/content';
+import { openMailDraft } from '@/lib/utils';
 
 export function CareersPage() {
   return (
@@ -167,16 +167,14 @@ function CareerForm() {
     setErrorMsg('');
 
     try {
-      const { error } = await supabase.from('career_applications').insert({
-        full_name: form.full_name,
-        email: form.email,
-        phone: form.phone,
-        position: form.position,
-        cv_url: cvUrl || null,
-        message: form.message || null,
+      openMailDraft(COMPANY.email, `Job application: ${form.position || 'General'} - ${form.full_name}`, {
+        Name: form.full_name,
+        Email: form.email,
+        Phone: form.phone,
+        Position: form.position,
+        'CV / Resume': cvUrl,
+        Message: form.message,
       });
-
-      if (error) throw error;
 
       setStatus('success');
       setForm({ full_name: '', email: '', phone: '', position: '', message: '' });
@@ -191,9 +189,9 @@ function CareerForm() {
     return (
       <div className="rounded-2xl border border-green-200 bg-green-50 p-8 text-center">
         <CheckCircle2 size={40} className="mx-auto text-green-600" />
-        <h3 className="mt-4 text-lg font-semibold text-slate-900">Application Submitted!</h3>
+        <h3 className="mt-4 text-lg font-semibold text-slate-900">Almost done!</h3>
         <p className="mt-2 text-sm text-slate-600">
-          Thank you for your interest in joining CRUX. Our team will review your application and get back to you.
+          Your email app has opened with your application. Press Send there to submit it.
         </p>
         <button
           onClick={() => setStatus('idle')}

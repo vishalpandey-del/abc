@@ -11,7 +11,7 @@ import {
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { SectionHeading } from '@/components/SectionHeading';
 import { SERVICES, COMPANY } from '@/data/content';
-import { supabase } from '@/lib/supabase';
+import { openMailDraft } from '@/lib/utils';
 
 export function ContactPage() {
   return (
@@ -158,17 +158,15 @@ function ContactForm() {
     setErrorMsg('');
 
     try {
-      const { error } = await supabase.from('contact_submissions').insert({
-        full_name: form.full_name,
-        email: form.email,
-        phone: form.phone || null,
-        service: form.service || null,
-        organisation_name: form.organisation_name || null,
-        designation: form.designation || null,
-        message: form.message,
+      openMailDraft(COMPANY.email, `Enquiry from ${form.full_name}`, {
+        Name: form.full_name,
+        Email: form.email,
+        Phone: form.phone,
+        Service: form.service,
+        Organisation: form.organisation_name,
+        Designation: form.designation,
+        Message: form.message,
       });
-
-      if (error) throw error;
 
       setStatus('success');
       setForm({
@@ -190,9 +188,9 @@ function ContactForm() {
     return (
       <div className="rounded-2xl border border-green-200 bg-green-50 p-8 text-center">
         <CheckCircle2 size={40} className="mx-auto text-green-600" />
-        <h3 className="mt-4 text-lg font-semibold text-slate-900">Message Sent!</h3>
+        <h3 className="mt-4 text-lg font-semibold text-slate-900">Almost done!</h3>
         <p className="mt-2 text-sm text-slate-600">
-          Thank you for reaching out to CRUX. Our team will get back to you shortly.
+          Your email app has opened with your message. Press Send there to reach our team.
         </p>
         <button
           onClick={() => setStatus('idle')}
